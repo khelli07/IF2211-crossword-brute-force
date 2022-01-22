@@ -7,5 +7,7 @@ public class Main {
 
         cw.getBoard().printMatrix();
         System.out.println(cw.getWords());
+        System.out.println();
+        cw.searchWords();
     }
 }
