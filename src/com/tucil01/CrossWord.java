@@ -41,7 +41,7 @@ public class CrossWord {
             for (int i = 0; i < matLines.size(); i++) {
                 char[] inchar = matLines.get(i).replace(" ", "").toCharArray();
                 for (int j = 0; j < inchar.length; j++) {
-                    this.board.setElmt(new Coordinate(i, j), inchar[j]);
+                    this.board.setElmt(new Coordinate(i, j), Character.toUpperCase(inchar[j]));
                 }
             }
 
@@ -49,7 +49,7 @@ public class CrossWord {
             this.words = new ArrayList<>();
             ln = br.readLine();
             while (ln != null) {
-                words.add(ln);
+                words.add(ln.toUpperCase());
                 ln = br.readLine();
             }
 
@@ -64,6 +64,7 @@ public class CrossWord {
         int rows = this.board.getRows();
         int cols = this.board.getCols();
         Matrix tmpMatrix = new Matrix(rows, cols);
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 tmpMatrix.setElmt(new Coordinate(i, j), '-');
@@ -74,21 +75,26 @@ public class CrossWord {
             tmpMatrix.setElmt(wordCoordinates.get(i), word.charAt(i));
         }
 
-        System.out.println(word);
+        System.out.println("Word: " + word);
         tmpMatrix.printMatrix();
+        System.out.println();
     }
 
     public void searchWords() {
         ArrayList<Coordinate> wordCoordinates = new ArrayList<>();
+        // For every word in the list
         for (String word : this.words) {
             char[] inchar = word.toCharArray();
             for (int i = 0; i < this.board.getRows(); i++) {
                 for (int j = 0; j < this.board.getCols(); j++) {
                     Coordinate startCr = new Coordinate(i, j); // Starting coordinate
+
+                    // Check first character
                     if (this.board.checkCurrentChar(startCr, inchar[0])) {
-                        // Determine which directions
+                        // Proceed to check surrounding if initial character match
                         ArrayList<Matrix.Direction> dirList = this.board.decideDirection(startCr, inchar[1]);
 
+                        // Iterate through every direction possible
                         for (Matrix.Direction dir : dirList) {
                             // Initialize starting point
                             int itr = 1;
@@ -107,7 +113,7 @@ public class CrossWord {
                                 }
                             }
 
-                            // If we found the word print, otherwise start again
+                            // If we found the word, print the board. Otherwise, start again
                             if (itr == inchar.length) {
                                 this.printWord(wordCoordinates, word);
                                 wordCoordinates.clear();
@@ -120,5 +126,4 @@ public class CrossWord {
             }
         }
     }
-
 }

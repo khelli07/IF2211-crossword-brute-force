@@ -1,0 +1,26 @@
+       Coordinate crRight = new Coordinate(x, y + 1);
+//        Coordinate crBRight = new Coordinate(x + 1, y + 1);
+//        Coordinate crBottom = new Coordinate(x + 1, y);
+//        Coordinate crBLeft = new Coordinate(x + 1, y - 1);
+//        Coordinate crLeft = new Coordinate(x, y - 1);
+//        Coordinate crULeft = new Coordinate(x - 1, y - 1);
+//        Coordinate crUpper = new Coordinate(x - 1, y);
+//        Coordinate crURight = new Coordinate(x - 1, y + 1);
+
+//        if (this.isCrValid(crRight) && this.getElmt(crRight) == nextChar) {
+//            dirList.add(Direction.RIGHT);
+//        } else if (this.isCrValid(crBRight) && this.getElmt(crBRight) == nextChar) {
+//            dirList.add(Direction.BOTTOM_RIGHT);
+//        } else if (this.isCrValid(crBottom) && this.getElmt(crBottom) == nextChar) {
+//            dirList.add(Direction.BOTTOM);
+//        } else if (this.isCrValid(crBLeft) && this.getElmt(crBLeft) == nextChar) {
+//            dirList.add(Direction.BOTTOM_LEFT);
+//        } else if (this.isCrValid(crLeft) && this.getElmt(crLeft) == nextChar) {
+//            dirList.add(Direction.LEFT);
+//        } else if (this.isCrValid(crULeft) && this.getElmt(crULeft) == nextChar) {
+//            dirList.add(Direction.UPPER_LEFT);
+//        } else if (this.isCrValid(crUpper) && this.getElmt(crUpper) == nextChar) {
+//            dirList.add(Direction.UPPER);
+//        } else if (this.isCrValid(crURight) && this.getElmt(crURight) == nextChar) {
+//            dirList.add(Direction.UPPER_RIGHT);
+//        }
