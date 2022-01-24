@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public
 class Matrix {
-    private final char[][] contents;
+    private final ColoredChar[][] contents;
     private int rows;
     private int cols;
+    private int compareCount;
 
-    public
-    enum Direction {
+    public enum Direction {
         UPPER,
         UPPER_RIGHT,
         RIGHT,
@@ -19,9 +19,10 @@ class Matrix {
     }
 
     Matrix(int rows, int cols) {
-        this.contents = new char[rows][cols];
+        this.contents = new ColoredChar[rows][cols];
         this.rows = rows;
         this.cols = cols;
+        this.compareCount = 0;
     }
 
     public void setRows(int rows) {
@@ -40,29 +41,61 @@ class Matrix {
         return this.cols;
     }
 
-    public boolean isCrValid(Coordinate cr) {
-        return (cr.getX() >= 0 && cr.getY() >= 0 && cr.getX() < this.rows && cr.getY() < this.cols);
-    }
-
-    public void setElmt(Coordinate cr, char c) {
-        this.contents[cr.getX()][cr.getY()] = c;
-    }
-
-    public char getElmt(Coordinate cr) {
+    public ColoredChar getElmt(Coordinate cr) {
         return this.contents[cr.getX()][cr.getY()];
+    }
+
+    public int getCompareCount() {
+        return this.compareCount;
+    }
+
+    public void setElmt(Coordinate cr, char c, ColoredChar.Color color) {
+        this.contents[cr.getX()][cr.getY()] = new ColoredChar(c);
     }
 
     public void printMatrix() {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.cols; j++) {
-                System.out.printf("%c ", this.getElmt(new Coordinate(i, j)));
+                System.out.printf("%c ", this.getElmt(new Coordinate(i, j)).getChar());
             }
             System.out.println();
         }
     }
 
-    public boolean checkCurrentChar(Coordinate cr, char c) {
-        return (this.getElmt(cr) == c);
+    public void printColoredMatrix() {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                this.getElmt(new Coordinate(i, j)).printChar();
+            }
+            System.out.println();
+        }
+    }
+
+    public void printWord(ArrayList<Coordinate> wordCoordinates, String word) {
+        Matrix tmpMatrix = new Matrix(this.rows, this.cols);
+
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                tmpMatrix.setElmt(new Coordinate(i, j), '-', ColoredChar.Color.RESET);
+            }
+        }
+
+        for (int i = 0; i < word.length(); i++) {
+            tmpMatrix.setElmt(wordCoordinates.get(i), word.charAt(i), ColoredChar.Color.RESET);
+        }
+
+        System.out.println("Word: " + word);
+        tmpMatrix.printMatrix();
+        System.out.println();
+    }
+
+    public boolean isCrValid(Coordinate cr) {
+        return (cr.getX() >= 0 && cr.getY() >= 0 && cr.getX() < this.rows && cr.getY() < this.cols);
+    }
+
+    public boolean checkCharacter(Coordinate cr, char c) {
+        this.compareCount++;
+        return (this.getElmt(cr).getChar() == c);
     }
 
     private void moveRight(Coordinate cr) {
@@ -117,7 +150,7 @@ class Matrix {
 
         for (int i = 0; i < moveX.length; i++) {
             Coordinate crTmp = new Coordinate(x + moveX[i], y + moveY[i]);
-            if (this.isCrValid(crTmp) && this.getElmt(crTmp) == nextChar) {
+            if (this.isCrValid(crTmp) && this.checkCharacter(crTmp, nextChar)) {
                 dirList.add(availableDir[i]);
             }
         }

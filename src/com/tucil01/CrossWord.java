@@ -41,7 +41,7 @@ public class CrossWord {
             for (int i = 0; i < matLines.size(); i++) {
                 char[] inchar = matLines.get(i).replace(" ", "").toCharArray();
                 for (int j = 0; j < inchar.length; j++) {
-                    this.board.setElmt(new Coordinate(i, j), Character.toUpperCase(inchar[j]));
+                    this.board.setElmt(new Coordinate(i, j), inchar[j], ColoredChar.Color.RESET);
                 }
             }
 
@@ -49,7 +49,8 @@ public class CrossWord {
             this.words = new ArrayList<>();
             ln = br.readLine();
             while (ln != null) {
-                words.add(ln.toUpperCase());
+                if (!this.words.contains(ln))
+                    words.add(ln.toUpperCase());
                 ln = br.readLine();
             }
 
@@ -60,28 +61,20 @@ public class CrossWord {
         }
     }
 
-    private void printWord(ArrayList<Coordinate> wordCoordinates, String word) {
-        int rows = this.board.getRows();
-        int cols = this.board.getCols();
-        Matrix tmpMatrix = new Matrix(rows, cols);
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                tmpMatrix.setElmt(new Coordinate(i, j), '-');
-            }
-        }
-
-        for (int i = 0; i < word.length(); i++) {
-            tmpMatrix.setElmt(wordCoordinates.get(i), word.charAt(i));
-        }
-
-        System.out.println("Word: " + word);
-        tmpMatrix.printMatrix();
-        System.out.println();
-    }
-
-    public void searchWords() {
+    public void searchWords(boolean printColored) {
         ArrayList<Coordinate> wordCoordinates = new ArrayList<>();
+        ColoredChar.Color[] availableColor = {
+                ColoredChar.Color.RED,
+                ColoredChar.Color.GREEN,
+                ColoredChar.Color.YELLOW,
+                ColoredChar.Color.BLUE,
+                ColoredChar.Color.PURPLE,
+                ColoredChar.Color.CYAN
+        };
+
+        int wordFound = 0;
+        int index = 0;
+
         // For every word in the list
         for (String word : this.words) {
             char[] inchar = word.toCharArray();
@@ -90,7 +83,7 @@ public class CrossWord {
                     Coordinate startCr = new Coordinate(i, j); // Starting coordinate
 
                     // Check first character
-                    if (this.board.checkCurrentChar(startCr, inchar[0])) {
+                    if (this.board.checkCharacter(startCr, inchar[0])) {
                         // Proceed to check surrounding if initial character match
                         ArrayList<Matrix.Direction> dirList = this.board.decideDirection(startCr, inchar[1]);
 
@@ -105,7 +98,7 @@ public class CrossWord {
                             // Walk
                             while (itr < inchar.length && walk) {
                                 this.board.moveOneStep(cr, dir);
-                                if (!this.board.isCrValid(cr) || !this.board.checkCurrentChar(cr, inchar[itr])) {
+                                if (!this.board.isCrValid(cr) || !this.board.checkCharacter(cr, inchar[itr])) {
                                     walk = false;
                                 } else {
                                     wordCoordinates.add(cr.copy());
@@ -115,7 +108,15 @@ public class CrossWord {
 
                             // If we found the word, print the board. Otherwise, start again
                             if (itr == inchar.length) {
-                                this.printWord(wordCoordinates, word);
+                                if (!printColored) {
+                                    this.board.printWord(wordCoordinates, word);
+                                } else {
+                                    for (Coordinate ctemp : wordCoordinates) {
+                                        this.board.getElmt(ctemp).setColor(availableColor[index]);
+                                    }
+                                    index = (index + 1) % availableColor.length;
+                                }
+                                wordFound++;
                                 wordCoordinates.clear();
                             } else {
                                 wordCoordinates.clear();
@@ -125,5 +126,9 @@ public class CrossWord {
                 }
             }
         }
+        if (printColored) {
+            this.board.printColoredMatrix();
+        }
+        System.out.println("Word found: (" + wordFound + "/" + this.words.size() + ")");
     }
 }
