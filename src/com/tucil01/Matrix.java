@@ -130,8 +130,9 @@ class Matrix {
         cr.setCoordinate(cr.getX() - 1, cr.getY() + 1);
     }
 
-    public ArrayList<Direction> decideDirection(Coordinate cr, char nextChar) {
+    public ArrayList<Direction> decideDirection(Coordinate cr, char[] word) {
         ArrayList<Direction> dirList = new ArrayList<>();
+        int len = word.length - 1;
         int x = cr.getX();
         int y = cr.getY();
 
@@ -149,8 +150,9 @@ class Matrix {
         };
 
         for (int i = 0; i < moveX.length; i++) {
-            Coordinate crTmp = new Coordinate(x + moveX[i], y + moveY[i]);
-            if (this.isCrValid(crTmp) && this.checkCharacter(crTmp, nextChar)) {
+            Coordinate secCr = new Coordinate(x + moveX[i], y + moveY[i]);
+            Coordinate lastCr = new Coordinate(x + moveX[i] * len, y + moveY[i] * len);
+            if (this.isCrValid(secCr) && this.isCrValid(lastCr) && this.checkCharacter(secCr, word[1])) {
                 dirList.add(availableDir[i]);
             }
         }

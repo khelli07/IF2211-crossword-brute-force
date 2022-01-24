@@ -35,11 +35,11 @@ public class CrossWord {
 
             // Move board to matrix
             int rows = matLines.size();
-            int cols = matLines.get(0).replace(" ", "").length();
+            int cols = matLines.get(0).replaceAll("\\s", "").length();
             this.board = new Matrix(rows, cols);
 
             for (int i = 0; i < matLines.size(); i++) {
-                char[] inchar = matLines.get(i).replace(" ", "").toCharArray();
+                char[] inchar = matLines.get(i).replaceAll("\\s", "").toCharArray();
                 for (int j = 0; j < inchar.length; j++) {
                     this.board.setElmt(new Coordinate(i, j), inchar[j], ColoredChar.Color.RESET);
                 }
@@ -78,14 +78,17 @@ public class CrossWord {
         // For every word in the list
         for (String word : this.words) {
             char[] inchar = word.toCharArray();
-            for (int i = 0; i < this.board.getRows(); i++) {
-                for (int j = 0; j < this.board.getCols(); j++) {
+            int i = 0;
+            boolean found = false;
+            while (i < this.board.getRows() && !found) {
+                int j = 0;
+                while (j < this.board.getCols() && !found) {
                     Coordinate startCr = new Coordinate(i, j); // Starting coordinate
 
                     // Check first character
                     if (this.board.checkCharacter(startCr, inchar[0])) {
                         // Proceed to check surrounding if initial character match
-                        ArrayList<Matrix.Direction> dirList = this.board.decideDirection(startCr, inchar[1]);
+                        ArrayList<Matrix.Direction> dirList = this.board.decideDirection(startCr, inchar);
 
                         // Iterate through every direction possible
                         for (Matrix.Direction dir : dirList) {
@@ -115,20 +118,25 @@ public class CrossWord {
                                         this.board.getElmt(ctemp).setColor(availableColor[index]);
                                     }
                                     index = (index + 1) % availableColor.length;
+                                    found = true;
                                 }
                                 wordFound++;
                                 wordCoordinates.clear();
                             } else {
                                 wordCoordinates.clear();
                             }
+                            if (found)
+                                break;
                         }
                     }
+                    j++;
                 }
+                i++;
             }
         }
         if (printColored) {
             this.board.printColoredMatrix();
         }
-        System.out.println("Word found: (" + wordFound + "/" + this.words.size() + ")");
+        System.out.println("Word found: (" + wordFound + "/" + this.words.size() + ").");
     }
 }
