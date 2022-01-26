@@ -2,7 +2,7 @@
 
 ### Brief description of the project
 
-Solving word searching puzzle with brute force algorithm
+Solving word searching (cross word) puzzle with brute force algorithm.
 
 ### System requirements:
 
@@ -11,7 +11,7 @@ Make sure Java (JDK) version 17 installed.
 ### How to run the program
 
 1. First, clone the repository with SSH/HTTPS or download the file ZIP.
-2. Before testing a file, move it to the .txt file to ./bin/jar/test.
+2. Before testing a file, move the .txt file to ./bin/jar/test.
 3. To run the program, run a command line, cd to this folder, then type
 
 ```
